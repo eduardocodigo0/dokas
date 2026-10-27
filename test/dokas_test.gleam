@@ -90,7 +90,10 @@ pub fn encoding_test() {
       "sem cebola",
       checkout,
     )
-  assert string.starts_with(url, "https://wa.me/5518997327064?text=")
+  assert string.starts_with(
+    url,
+    "https://wa.me/" <> domain.whatsapp_number <> "?text=",
+  )
   assert string.contains(url, "%0A")
   assert string.contains(url, "%C3%A7")
   assert string.contains(url, "%C3%A3")
@@ -155,7 +158,10 @@ pub fn view_renders_whatsapp_link_test() {
     )
 
   let rendered = element.to_string(app.view(model))
-  assert string.contains(rendered, "https://wa.me/5518997327064?text=")
+  assert string.contains(
+    rendered,
+    "https://wa.me/" <> domain.whatsapp_number <> "?text=",
+  )
   assert string.contains(rendered, "Maria")
 }
 

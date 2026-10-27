@@ -139,7 +139,7 @@ pub fn view(model: Model) -> Element(Msg) {
       [
         error_view(model.error),
         html.div([attribute.class("grid gap-6 lg:grid-cols-[1fr_360px]")], [
-          html.div([attribute.class("space-y-5")], [
+          html.div([attribute.class("min-w-0 space-y-5")], [
             category_tabs_view(model.active_category),
             menu_view(model),
           ]),
@@ -304,7 +304,7 @@ fn quantity_view(
   variation_index: Int,
   quantity: Int,
 ) -> Element(Msg) {
-  html.div([attribute.class("flex items-center gap-1")], [
+  html.div([attribute.class("flex shrink-0 items-center gap-1")], [
     html.button(
       [
         attribute.class(
@@ -337,7 +337,7 @@ fn summary_view(model: Model) -> Element(Msg) {
   html.aside(
     [
       attribute.class(
-        "h-fit rounded-2xl bg-white p-5 shadow-sm ring-1 ring-orange-100 lg:sticky lg:top-6",
+        "min-w-0 h-fit rounded-2xl bg-white p-5 shadow-sm ring-1 ring-orange-100 lg:sticky lg:top-6",
       ),
     ],
     [
