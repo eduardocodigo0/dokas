@@ -1,0 +1,4 @@
+@import "tailwindcss";
+
+/* Make sure Tailwind scans our Gleam sources for utility class names. */
+@source "./**/*.gleam";
