@@ -63,6 +63,27 @@ gleam run -m lustre/dev build --minify
 
 Os artefatos (JavaScript + CSS + `index.html`) são gerados em `dist/`.
 
+## Deploy (GitHub Pages)
+
+O deploy é **manual**, pela pipeline `.github/workflows/deploy.yml`:
+
+1. No GitHub, acesse **Actions → Deploy to GitHub Pages → Run workflow** (branch `main`), ou rode:
+   ```sh
+   gh workflow run deploy.yml
+   ```
+2. A pipeline compila o app (`gleam run -m lustre/dev build --minify`), ajusta os caminhos dos assets para o subdiretório do Pages e publica o conteúdo de `dist/`.
+
+Site publicado: <https://eduardocodigo0.github.io/dokas/>
+
+O gatilho é apenas `workflow_dispatch`. Para deploy automático a cada push, adicione ao workflow:
+
+```yaml
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+```
+
 ## Testes
 
 ```sh
