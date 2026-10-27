@@ -1,0 +1,61 @@
+name: Deploy to GitHub Pages
+
+# Manual deploy: run this workflow from the "Actions" tab (or with
+# `gh workflow run deploy.yml`) after any change.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Gleam and Erlang
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: "29"
+          gleam-version: "1.19.2"
+          rebar3-version: "3"
+
+      - name: Install dependencies
+        run: gleam deps download
+
+      - name: Build the application
+        run: gleam run -m lustre/dev build --minify --outdir=dist
+
+      # GitHub project pages are served from /<repo>/, so absolute asset paths
+      # like "/dokas.css" would 404. Rewrite them to relative paths.
+      - name: Make asset paths relative
+        run: sed -i 's#="/#="./#g' dist/index.html
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
